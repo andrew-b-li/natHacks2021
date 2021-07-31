@@ -1,6 +1,0 @@
-{
-    "emmet.includeLanguages": {
-        "javascript": "jsx"
-    },
-    "emmet.triggerExpansionOnTab": true
-}
