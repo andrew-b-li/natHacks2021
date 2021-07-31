@@ -1,16 +1,35 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import jwt_decode from "jwt-decode";
-import setAuthToken from "./utils/setAuthToken";
-import { setCurrentUser, logoutUser } from "./actions/authActions";
-import { Provider } from "react-redux";
-import store from "./store";
-import Navbar from "./components/layout/Navbar";
-import Landing from "./components/layout/Landing";
-import Login from "./components/auth/Login";
-import Register from "./components/auth/Register";
-import PrivateRoute from "./components/private-route/PrivateRoute";
-import Dashboard from "./components/dashboard/Dashboard";
+import React, { Suspense } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
+// Styling
+import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
+import theme from 'config/theme.js';
+import { StylesProvider } from '@material-ui/styles';
+import { ThemeProvider } from 'styled-components';
+import './App.css';
+
+// Layouts
+import MainLayout from 'components/layouts/MainLayout';
+
+// Auth
+import jwt_decode from 'jwt-decode';
+import setAuthToken from './utils/setAuthToken';
+import { setCurrentUser, logoutUser } from './actions/authActions';
+
+// Contexts
+import AppContextProvider from 'contexts/AppContext';
+
+// Redux
+import { Provider } from 'react-redux';
+import store from './store';
+
+// Components/Pages
+import Navbar from './components/layout/Navbar';
+import Landing from './components/layout/Landing';
+import Login from './components/auth/Login';
+import Register from './components/auth/Register';
+import PrivateRoute from './components/private-route/PrivateRoute';
+import Dashboard from './components/dashboard/Dashboard';
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -32,26 +51,39 @@ if (localStorage.jwtToken) {
     store.dispatch(logoutUser());
 
     // Redirect to login
-    window.location.href = "./login";
+    window.location.href = './login';
   }
 }
 
-function App() {
+const App = () => {
   return (
     <Provider store={store}>
       <Router>
-        <div className="App">
-          <Navbar />
-          <Route exact path="/" component={Landing} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/login" component={Login} />
-          <Switch>
-            <PrivateRoute exact path="/dashboard" component={Dashboard} />
-          </Switch>
-        </div>
+        <StylesProvider injectFirst>
+          <AppContextProvider>
+            <MuiThemeProvider theme={theme}>
+              <ThemeProvider theme={theme}>
+                <Suspense fallback="loading">
+                  <MainLayout>
+                    <Switch>
+                      <Route exact path="/" component={Landing} />
+                      <Route exact path="/register" component={Register} />
+                      <Route exact path="/login" component={Login} />
+                      <PrivateRoute
+                        exact
+                        path="/dashboard"
+                        component={Dashboard}
+                      />
+                    </Switch>
+                  </MainLayout>
+                </Suspense>
+              </ThemeProvider>
+            </MuiThemeProvider>
+          </AppContextProvider>
+        </StylesProvider>
       </Router>
     </Provider>
   );
-}
+};
 
 export default App;
