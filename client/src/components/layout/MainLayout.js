@@ -26,6 +26,8 @@ import useDidMount from 'components/useDidMount';
 // Components
 import Header from './Header';
 import usePrevious from 'components/usePrevious';
+import useDidMountEffect from 'components/useDidMountEffect';
+import Footer from './Footer';
 
 const MainSection = styled.section`
   min-height: 100%;
@@ -42,13 +44,6 @@ const MainDiv = styled.main`
   }
 `;
 
-const Footer = styled.footer`
-  width: 100%;
-  min-height: 67px;
-  background: ${(props) => props.theme._colors.brown};
-  flex-shrink: 0;
-`;
-
 const MainLayout = ({ pageTitle, layoutOptions, children }) => {
   const history = useHistory();
   const appCtx = useContext(AppContext);
@@ -62,44 +57,55 @@ const MainLayout = ({ pageTitle, layoutOptions, children }) => {
     if (pageTitle) document.title = pageTitle;
   }, [layoutOptions?.pageTitle, appCtx.mainLayoutOptions, pageTitle]);
 
-  const userWasAuthenticated = usePrevious(userCtx.auth.isAuthenticated);
-
+  // Logout
   useEffect(() => {
-    if (userWasAuthenticated && !userCtx.auth.isAuthenticated)
+    if (userCtx.auth.awaitingLogout) {
+      userDispatch({ type: 'LOGOUT_COMPLETE' });
       history.push('/');
+    }
+  }, [userCtx.auth.awaitingLogout]);
 
+  // Check if user is authenticated
+  useEffect(() => {
+    userDispatch({ type: 'USER_DATA_REQUEST' });
     // Check for token to keep user logged in
     if (localStorage.jwtToken && userCtx) {
       // Set auth token header auth
       const token = localStorage.jwtToken;
       setAuthToken(token);
 
-      // Decode token and get user info and exp
-      const decoded = jwt_decode(token);
+      try {
+        // Decode token and get user info and exp
+        const decoded = jwt_decode(token);
 
-      // Set user and isAuthenticated
-      userDispatch({
-        type: 'USER_DATA_SUCCESS',
-        payload: decoded,
-      });
+        // Set user and isAuthenticated
+        userDispatch({
+          type: 'USER_DATA_SUCCESS',
+          payload: decoded,
+        });
 
-      // Check for expired token
-      const currentTime = Date.now() / 1000; // to get in milliseconds
+        // Check for expired token
+        const currentTime = Date.now() / 1000; // to get in milliseconds
 
-      if (decoded.exp < currentTime) {
-        // Logout user
-        logoutUser();
+        if (decoded.exp < currentTime) {
+          // Logout user
+          logoutUser(userDispatch);
 
-        // Redirect to landing/login page
-        history.push('/');
+          // Redirect to landing/login page
+          // history.push('/');
+        }
+      } catch (err) {
+        logoutUser(userDispatch);
       }
+    } else {
+      userDispatch({ type: 'USER_DATA_FAIL' });
     }
   }, [userCtx.auth.isAuthenticated]);
 
   return (
     <MainSection>
       <NotificationList />
-      {!layoutOptions?.hideHeader && <Header />}
+      {layoutOptions && !layoutOptions.hideHeader && <Header />}
       <MainDiv>{children}</MainDiv>
       <Footer />
     </MainSection>

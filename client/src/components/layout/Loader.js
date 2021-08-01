@@ -18,6 +18,13 @@ import {
 // Hooks
 import useDidMountEffect from 'components/useDidMountEffect';
 
+// Assets
+import loaderSvg from 'components/svg/bars.svg';
+
+// const styledLoaderSvg = styled(loaderSvg)`
+//   fill: ${(props) => props.theme._colors.blue};
+// `;
+
 const Loader = styled(
   ({ loaded, children, loader = 'Loading...', ...props }) => {
     const [show, setShow] = useState(false);
@@ -25,7 +32,7 @@ const Loader = styled(
       setShow(true);
     }, [loaded]);
 
-    return <>{show ? children : loader}</>;
+    return <PageContainer>{show ? children : loader}</PageContainer>;
   }
 )``;
 

@@ -94,12 +94,6 @@ const CustomAlert = styled(({ type, children, ...props }) => {
     </>
   );
 })`
-  position: fixed;
-  width: max-content;
-  min-width: 30%;
-  left: 50%;
-  transform: translateX(-50%) translateY(20%);
-  z-index: ${(props) => props.theme.zIndex.snackbar};
   svg {
     width: 1.25rem;
     height: 1.25rem;
@@ -168,13 +162,26 @@ const CustomAlert = styled(({ type, children, ...props }) => {
 `;
 
 const notificationAnimations = {
-  initial: { opacity: 0 },
+  initial: {
+    opacity: 0,
+    width: 'max-content',
+    minWidth: '30%',
+    position: 'fixed',
+    left: '50%',
+    y: '-100vh',
+    x: '-50%',
+    zIndex: theme.zIndex.snackbar,
+  },
   animate: {
     opacity: 1,
+    y: 20,
+    x: '-50%',
     transition: { duration: 1, ease: theme._easings.default },
   },
   exit: {
     opacity: 0,
+    y: '-100vh',
+    x: '-50%',
     transition: { duration: 1, ease: theme._easings.default },
   },
 };

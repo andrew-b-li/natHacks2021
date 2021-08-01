@@ -6,7 +6,12 @@ export const UserContext = createContext();
 
 const UserContextProvider = (props) => {
   const initUserState = {
-    auth: { isAuthenticated: false, userData: null },
+    auth: {
+      loading: true,
+      isAuthenticated: false,
+      userData: null,
+      awaitingLogout: false,
+    },
   };
   const userReducer = combineReducers({
     auth,

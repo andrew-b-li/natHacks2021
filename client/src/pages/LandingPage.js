@@ -53,17 +53,27 @@ import { loginUser } from 'actions/authActions';
 const LP__LeftColumn = styled(Grid)``;
 const LP__LightBlueCircleBackground = styled(motion.div)`
   ${(props) => props.theme.breakpoints.up('md')} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     &:before {
       z-index: -1;
       background: ${(props) => props.theme._colors.lightblue};
       position: absolute;
       top: 0px;
       left: 50%;
-      margin-left: -35%;
-      transform: translate3d(-45%, -30%, 0);
+      transform: translate3d(-45%, -25%, 0);
+      ${(props) => props.theme.breakpoints.only('xl')} {
+        margin-left: -35%;
+      }
+      ${(props) => props.theme.breakpoints.only('lg')} {
+        margin-left: -40%;
+        transform: translate3d(-45%, -25%, 0);
+      }
       ${(props) => props.theme.breakpoints.down('md')} {
-        margin-left: -45%;
-        transform: translate3d(-42%, -10%, 0);
+        margin-left: -48%;
+        transform: translate3d(-40%, -5%, 0);
       }
       content: '';
       width: 80vw;
@@ -75,18 +85,22 @@ const LP__LightBlueCircleBackground = styled(motion.div)`
   }
 
   ${(props) => props.theme.breakpoints.down('sm')} {
+    position: relative;
+    width: 100%;
     &:before {
       z-index: -1;
       background: ${(props) => props.theme._colors.lightblue};
       position: absolute;
-      top: 0px;
+      top: 0;
+      bottom: 0;
       left: 0;
-      transform: translate3d(0vw, -60%, 0);
+      right: 0;
+      margin: auto;
+      transform: translate3d(0px, 20%, 0);
       content: '';
-      width: 100%;
-      height: 100vw;
-      border-bottom-left-radius: 50% 30%;
-      border-bottom-right-radius: 50% 30%;
+      width: clamp(95vw, 95vw, 500px);
+      height: clamp(95vw, 95vw, 500px);
+      border-radius: 50%;
       overflow: hidden;
     }
   }
@@ -106,6 +120,22 @@ const LP__LandingImageContainer = styled(GridContainer)`
       height: 25vw;
       max-width: 480px;
       max-height: 480px;
+      border-radius: 50%;
+    }
+  }
+  ${(props) => props.theme.breakpoints.down('sm')} {
+    &:before {
+      z-index: -1;
+      background: ${(props) => props.theme._colors.blue};
+      position: absolute;
+      top: 0;
+      left: calc(50% - clamp(50vw, 800px) / 2);
+      transform: translate3d(0, -30%, 0);
+      content: '';
+      width: 50vw;
+      height: 50vw;
+      max-width: 800px;
+      max-height: 800px;
       border-radius: 50%;
     }
   }
@@ -400,8 +430,8 @@ const LandingPage = styled(({ ...props }) => {
 
   return (
     <PageContainer alignContent="center" defeaultPadding {...props}>
-      <ClearBlock xs={12} pb={{ xs: 20, sm: 20, md: 30, lg: 30, xl: 30 }} />
       <LP__LightBlueCircleBackground />
+      <ClearBlock xs={12} pb={{ xs: 20, sm: 20, md: 30, lg: 30, xl: 30 }} />
       <Grid item xs={11}>
         <SpacedGridContainer
           spacing={isSmall ? 4 : 0}

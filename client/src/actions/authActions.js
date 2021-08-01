@@ -55,10 +55,42 @@ export const registerUser = (userData, dispatch, notification) => {
   axios
     .post('/api/users/register', userData)
     .then((res) => {
-      console.log(res.data);
-      console.log('looking good');
-      // history.push('/login')
-    }) // re-direct to login on successful register
+      if (res.status === 200) {
+        const { token } = res.data;
+        localStorage.setItem('jwtToken', token);
+
+        // Set token to Auth header
+        setAuthToken(token);
+
+        // Decode token to get user data
+        const decoded = jwt_decode(token);
+
+        notification.add('registerAndLoginSuccess', {
+          type: 'success',
+          message:
+            'Sign up successful. Logging you in...' ||
+            H.defaultSuccessMessage(),
+        });
+
+        // Set current user
+        dispatch({
+          type: 'USER_DATA_SUCCESS',
+          payload: decoded,
+        });
+
+        // dispatch({ type: 'USER_DATA_SUCCESS' });
+        // notification.add('signUpError', {
+        //   type: 'error',
+        //   message: err.response.data?.errMsg || H.defaultErrorMessage(),
+        // });
+      } else {
+        dispatch({ type: 'USER_DATA_FAIL' });
+        notification.add('signUpError', {
+          type: 'error',
+          message: H.defaultErrorMessage(),
+        });
+      }
+    })
     .catch((err) => {
       console.log(err.response);
       dispatch({ type: 'USER_DATA_FAIL' });
@@ -77,5 +109,5 @@ export const logoutUser = (dispatch) => {
   setAuthToken(false);
 
   // Set current user to empty object {} which will set isAuthenticated to false
-  dispatch({ type: 'RESET_AUTH' });
+  dispatch({ type: 'REQUEST_LOGOUT' });
 };

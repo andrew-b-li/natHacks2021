@@ -47,6 +47,7 @@ import useDidMount from 'components/useDidMount';
 import { registerUser } from 'actions/authActions';
 import { useNotificationQueue } from 'contexts/NotificationsContext';
 import { UserContext } from 'contexts/UserContext';
+import { useHistory } from 'react-router-dom';
 
 // #region LEFT COLUMN
 const SUP__LeftColumn = styled(Grid)`
@@ -309,6 +310,7 @@ const SUP__RadioInput = styled(
 // #endregion
 
 const SignUpPage = styled(({ ...props }) => {
+  const history = useHistory();
   const [formSchema, setFormSchema] = useState({});
   const updateFormSchema = (newItem) => {
     setFormSchema((prevFormSchema) => ({ ...prevFormSchema, ...newItem }));
@@ -353,6 +355,13 @@ const SignUpPage = styled(({ ...props }) => {
   //   Screen size
   const isXSmall = useMediaQuery(theme.breakpoints.down('xs'));
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
+
+  // User state change listeners
+  useDidMountEffect(() => {
+    if (userCtx.auth.isAuthenticated) {
+      history.push('/user/dashboard');
+    }
+  }, [userCtx.auth?.isAuthenticated]);
 
   //   Form submission handling
   const onSubmit = (data) => {
@@ -517,7 +526,7 @@ const SignUpPage = styled(({ ...props }) => {
 
   return (
     <PageContainer alignContent="center" {...props}>
-      <ClearBlock xs={12} pb={{ xs: 20, sm: 20, md: 30, lg: 30, xl: 30 }} />
+      {/* <ClearBlock xs={12} pb={{ xs: 20, sm: 20, md: 30, lg: 30, xl: 30 }} /> */}
       <Grid item xs={11}>
         <SpacedGridContainer
           spacing={isSmall ? 4 : 0}
@@ -552,7 +561,7 @@ const SignUpPage = styled(({ ...props }) => {
           </SUP__RightColumn>
         </SpacedGridContainer>
       </Grid>
-      <ClearBlock xs={12} pb={{ xs: 20, sm: 20, md: 30, lg: 30, xl: 30 }} />
+      {/* <ClearBlock xs={12} pb={{ xs: 20, sm: 20, md: 30, lg: 30, xl: 30 }} /> */}
     </PageContainer>
   );
 })`

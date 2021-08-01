@@ -11,6 +11,7 @@ const theme = createTheme({
   palette: {
     // primary: { main: '#B5B0F6', contrastText: '#fff' },
     blue: { ...blue },
+    text: { primary: colors.text, secondary: colors.textgrey },
   },
   typography: {
     fontFamily: "'Lato', sans-serif",
