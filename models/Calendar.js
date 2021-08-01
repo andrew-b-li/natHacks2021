@@ -8,17 +8,16 @@ const EventSchema = new Schema({
   },
   startDate: {
     type: Date,
-    default: undefined, // Need to set start date before event is legitimate
+    default: Date.now,
     required: true,
   },
   endDate: {
     type: Date,
-    default: undefined, // Need to set end date
+    default: Date.now,
     required: true,
   },
   title: {
     type: String,
-    default: undefined,
     required: true,
   }
 });
@@ -34,7 +33,7 @@ const CalendarSchema = new Schema({
   },
   events: {
     type: [EventSchema],
-    default: undefined,
+    required: true,
   }
 });
 
