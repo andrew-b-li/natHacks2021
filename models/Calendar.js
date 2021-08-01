@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Schema - mongoose.Schema;
+const Schema = mongoose.Schema;
 
 const EventSchema = new Schema({
   eventId: {
@@ -39,5 +39,4 @@ const CalendarSchema = new Schema({
 });
 
 module.exports = Calendar = mongoose.model('calendars', CalendarSchema);
-
 

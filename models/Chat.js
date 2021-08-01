@@ -4,11 +4,11 @@ const Schema = mongoose.Schema;
 const MessageSchema = new Schema({
   senderId: {
     type: Number,
-    required: true;
+    required: true,
   },
   receiverId: {
     type: Number,
-    required: true;
+    required: true,
   },
   message: {
     type: String,
@@ -27,21 +27,20 @@ const MessageSchema = new Schema({
 const ChatSchema = new Schema({
   sessionId: {
     type: Number,
-    required: true;
+    required: true,
   },
   patientId: {
     type: Number,
-    required: true;
+    required: true,
   },
   clinicianId: {
     type: Number,
-    required: true;
+    required: true,
   },
   messages: {
     type: [MessageSchema],
-    default: undefined,
     required: true,
   },
 });
 
-module.exports = Chat = mongoose.model('chat', ChatSchema);
+module.exports = Chat = mongoose.model('chats', ChatSchema);
