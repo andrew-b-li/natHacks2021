@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/vishalnagda1/mern-jwt-auth#readme",
   "dependencies": {
+    "@material-ui/icons": "^4.11.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "concurrently": "^5.2.0",

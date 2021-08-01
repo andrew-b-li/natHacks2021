@@ -12,6 +12,7 @@ import {
   Divider,
   Box,
   Badge,
+  Link as MUILink,
   Avatar,
   IconButton,
   TextField,
@@ -34,6 +35,7 @@ import {
 } from '@material-ui/core';
 import { motion, AnimatePresence, AnimateSharedLayout } from 'framer-motion';
 
+import { Link as RRDLink } from 'react-router-dom';
 import 'styled-components/macro';
 import useDidMountEffect from 'components/useDidMountEffect';
 
@@ -140,7 +142,8 @@ export const PageContainer = styled((props) => (
   > div {
     min-height: inherit;
   }
-  ${(props) =>
+  width: 100%;
+  /* ${(props) =>
     props.adjustDimensionsForNavBar !== false &&
     css`
       ${(props) => props.theme.breakpoints.up('sm')} {
@@ -151,7 +154,7 @@ export const PageContainer = styled((props) => (
         width: 100%;
         margin: 0;
       }
-    `}
+    `} */
 `;
 
 export const SpacedGridContainer = styled(
@@ -344,3 +347,33 @@ export const HideUntil = ({ trigger, children }) => {
   if (display) return children;
   return <></>;
 };
+
+export const StyledLink = styled((props) => (
+  <MUILink component="span" underline="none" {...props} />
+))`
+  color: ${(props) => props.theme._colors.blue};
+  cursor: pointer;
+`;
+
+export const Link = ({ to, ...props }) => (
+  <RRDLink
+    css={`
+      text-decoration: none;
+    `}
+    to={to}
+  >
+    <StyledLink {...props} />
+  </RRDLink>
+);
+
+export const Logo = styled((props) => (
+  <Typography {...props}>neural.ly</Typography>
+))`
+  font-family: Fredericka the Great;
+  font-style: normal;
+  font-weight: normal;
+  /* font-size: 64px; */
+  line-height: 78px;
+  letter-spacing: 0.1em;
+  color: #5551ff;
+`;
