@@ -94,6 +94,11 @@ const CustomAlert = styled(({ type, children, ...props }) => {
     </>
   );
 })`
+  position: fixed;
+  width: max-content;
+  min-width: 30%;
+  left: 50%;
+  transform: translateX(-50%) translateY(20%);
   z-index: ${(props) => props.theme.zIndex.snackbar};
   svg {
     width: 1.25rem;
@@ -228,31 +233,26 @@ const NotificationList = styled((props) => {
   const queue = useNotificationQueue();
 
   return (
-    <MotionGrid
+    <>
+      {/* <MotionGrid
       container
       justifyContent="center"
       alignItems="center"
       {...props}
-    >
+    > */}
       <AnimatePresence>
         {queue.entries.map(({ id, data }, idx) => {
           return (
             <Notification
               key={idx}
-              {...{ id, data, queue, autoHideDuration: data.timeout ?? 60 }}
+              {...{ id, data, queue, autoHideDuration: data.timeout ?? 4 }}
             />
           );
         })}
       </AnimatePresence>
-    </MotionGrid>
+      {/* </MotionGrid> */}
+    </>
   );
-})`
-  height: auto;
-  width: 100%;
-  z-index: ${(props) => props.theme.zIndex.snackbar};
-  position: fixed;
-  top: 0;
-  left: 0;
-`;
+})``;
 
 export default NotificationList;
