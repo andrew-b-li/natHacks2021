@@ -13,7 +13,7 @@ const theme = createTheme({
     blue: { ...blue },
   },
   typography: {
-    fontFamily: "'Quicksand', sans-serif",
+    fontFamily: "'Lato', sans-serif",
     fontWeightLight: 300,
     fontWeightRegular: 400,
     fontWeightMedium: 500,

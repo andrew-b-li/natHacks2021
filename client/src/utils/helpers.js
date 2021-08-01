@@ -163,3 +163,6 @@ export const randomUnique = (range, count) => {
   }
   return [...nums];
 };
+
+export const defaultErrorMessage = () => 'Sorry, something went wrong.';
+export const defaultSuccessMessage = () => 'Sucess';
