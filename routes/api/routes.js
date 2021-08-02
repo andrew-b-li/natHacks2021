@@ -29,6 +29,7 @@ const catchErrors = (fn) => {
 };
 // #endregion
 
+// Register new client/clinician
 router.post(
   '/users/register',
   body('name').not().isEmpty().trim().escape().withMessage('Invalid name.'),
@@ -99,6 +100,7 @@ router.post(
   }
 );
 
+// Patient/clinician login
 router.post(
   '/users/login',
   body('email')
@@ -153,6 +155,7 @@ router.post(
   }
 );
 
+// Get calendar
 router.get(
   '/users/calendar',
   isAuthenticated,
@@ -165,6 +168,8 @@ router.get(
     }
   })
 );
+
+// Create a calendar event
 router.post(
   '/users/calendar/event/create',
   isAuthenticated,
@@ -191,6 +196,8 @@ router.post(
     }
   })
 );
+
+// Delete a calendar event
 router.post(
   '/users/calendar/event/delete',
   isAuthenticated,
@@ -221,5 +228,86 @@ router.post(
     }
   })
 );
+
+// EEG save endpoint by session
+// Searches through sessions using session ID, NOT client ID
+router.post(
+  '/sessions/eeg/post',
+  isAuthenticated,
+  body('targetId').notEmpty().withMessage("Invalid targetId"),
+  body('eeg').notEmpty().withMessage("Invalid EEG data")
+  catchErrors(async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log(errors);
+      return res.status(400).json({ errors: errors.array().map((x) => x.msg) });
+    }
+
+    // Assuming waveforms in the form:
+    // {
+    //  x: [array of time/x values]
+    //  y: [array of wave amplitude/y values]
+    // }
+
+    if (req.user) {
+      let timeSteps = req.body.waveforms.x;
+      let waveAmplitudes = req.body.waveforms.y;
+
+      let saveData = []
+
+      timeSteps.forEach((timeStep, index) => {
+        saveData.push({ x: timestep, y: waveAmplitudes[index] });
+      })
+
+      // Add waveforms to session with requested ID
+      let updatedSession = await Session.findOneAndUpdate({ eventId: req.body.targetId  }, 
+                                                          { waveformTimeSeries: saveData },
+                                                          {new: true});
+      res.status(200).json(updatedSession)
+    }
+  });
+
+)
+
+// EEG get endpoint by session
+// Searches through sessions using eventId, NOT clientId
+router.get(
+  '/sessions/eeg/get',
+  isAuthenticated,
+  body('targetId').notEmpty().withMessage("Invalid targetId"),
+  catchErrors(async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log(errors);
+      return res.status(400).json({ errors: errors.array().map((x) => x.msg) });
+    }
+
+    if (req.user) {
+      // Get session and retrieve waveforms
+      Session.findOne({ eventId: req.body.targetId }, function (err, session) => {
+        if (err || !session) {
+          console.log(err);
+          return res.status(400).json(err);
+        }
+        let timeSteps = [];
+        let amplitudes = [];
+
+        // saves waveform in json format:
+        // {
+        //  x: [array of time/x values]
+        //  y: [array of wave amplitude/y values]
+        // }
+        session.waveformTimeSeries.forEach(elem => {
+          timeSteps.push(elem.x)
+          amplitudes.push(elem.y)
+        })
+
+        let waveform = {x: timesteps, y: amplitudes};
+
+        res.json(waveform);
+      });
+    }
+  });
+)
 
 module.exports = router;
