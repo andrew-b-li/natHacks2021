@@ -46,19 +46,19 @@ const footer = styled(({ ...props }) => {
     <footer {...props}>
       <Grid container justifyContent="space-evenly" alignItems="center">
         <Grid item>
-          <FooterLink href="/" color="inherit">
+          <FooterLink to="/about" color="inherit">
             About
           </FooterLink>
         </Grid>
 
         <Grid item>
-          <FooterLink href="/" color="inherit">
+          <FooterLink to="/" color="inherit">
             Contact Us
           </FooterLink>
         </Grid>
 
         <Grid item>
-          <FooterLink href="/" color="inherit">
+          <FooterLink to="/" color="inherit">
             Privacy
           </FooterLink>
         </Grid>
