@@ -244,7 +244,7 @@ router.get(
     }
 
     if (req.user) {
-      User.findById(req.body.targetId, function (err, user) => {
+      User.findById(req.body.targetId, function (err, user) {
         if (err || !user) {
           console.log(err)
           return res.status(400).json(err)
@@ -261,7 +261,7 @@ router.post(
   '/sessions/eeg/post',
   isAuthenticated,
   body('targetId').notEmpty().withMessage("Invalid targetId"),
-  body('eeg').notEmpty().withMessage("Invalid EEG data")
+  body('eeg').notEmpty().withMessage("Invalid EEG data"),
   catchErrors(async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -286,14 +286,11 @@ router.post(
       })
 
       // Add waveforms to session with requested ID
-      let updatedSession = await Session.findOneAndUpdate({ eventId: req.body.targetId  }, 
-                                                          { waveformTimeSeries: saveData },
-                                                          {new: true});
+      let updatedSession = await Session.findOneAndUpdate({eventId: req.body.targetId}, {waveformTimeSeries: saveData}, {new: true});
       res.status(200).json(updatedSession)
     }
-  });
-
-)
+  })
+);
 
 // EEG get endpoint by session
 // Searches through sessions using eventId, NOT clientId
@@ -310,7 +307,7 @@ router.get(
 
     if (req.user) {
       // Get session and retrieve waveforms
-      Session.findOne({ eventId: req.body.targetId }, function (err, session) => {
+      Session.findOne({ eventId: req.body.targetId }, function (err, session) {
         if (err || !session) {
           console.log(err);
           return res.status(400).json(err);
@@ -333,7 +330,7 @@ router.get(
         res.json(waveform);
       });
     }
-  });
-)
+  })
+);
 
 module.exports = router;
