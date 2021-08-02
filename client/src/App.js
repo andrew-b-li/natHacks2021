@@ -29,6 +29,7 @@ import CalendarPage from 'pages/CalendarPage';
 import ScheduleNewSessionPage from 'pages/ScheduleNewSessionPage';
 import LiveSessionPage from 'pages/LiveSessionPage';
 import GamePage from 'pages/GamePage';
+import AboutPage from 'pages/AboutPage';
 // import Login from './components/auth/Login';
 // import Register from './components/auth/Register';
 
@@ -81,6 +82,11 @@ const App = () => {
                           exact
                           path="/signup"
                           component={SignUpPage}
+                        />
+                        <AnimatedRoute
+                          exact
+                          path="/about"
+                          component={AboutPage}
                         />
 
                         {/* Private routes */}
