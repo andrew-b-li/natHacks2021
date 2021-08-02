@@ -55,6 +55,7 @@ import {
   deleteEventFromPatientCalendar,
   fetchUserCalendar,
 } from 'actions/userActions';
+import { CTAButton } from 'components/styles/global';
 
 // #region Styling
 
@@ -62,6 +63,7 @@ import {
 
 const CalendarPage = styled(({ ...props }) => {
   const notification = useNotificationQueue();
+  const history = useHistory();
   const appCtx = useContext(AppContext);
   const [userCtx, dispatch] = useContext(UserContext);
 
@@ -79,6 +81,7 @@ const CalendarPage = styled(({ ...props }) => {
 
   const [userType, setUserType] = useState(null);
   const [userEvents, setUserEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   // User state change listeners
   useEffect(() => {
@@ -86,7 +89,7 @@ const CalendarPage = styled(({ ...props }) => {
     if (userCtx.auth.userData) {
       // console.log(userCtx.auth.userData);
       setUserType(userCtx.auth.userData.userType);
-      // fetchUserEvents(userCtx.auth.userData, setUserEvents);
+      if (userEvents.length === 0) fetchUserCalendar(setUserEvents);
 
       // deleteEventFromPatientCalendar({
       //   targetId: '6106e135d8f3797a80e15b60',
@@ -95,7 +98,7 @@ const CalendarPage = styled(({ ...props }) => {
 
       // fetchUserCalendar();
     }
-  }, [userCtx.auth.isAuthenticated]);
+  }, [userEvents, userCtx.auth.isAuthenticated]);
 
   // const userEvents = [
   //   {
@@ -116,10 +119,60 @@ const CalendarPage = styled(({ ...props }) => {
           <Grid item xs={12} sm={8} lg={6}>
             <Calendar
               events={userEvents}
-              onSelectEvent={(event, e) => console.log(event, e)}
+              onSelectEvent={(event, e) => setSelectedEvent(event)}
             />
           </Grid>
-          <Grid item xs={12} sm={3} lg={4}></Grid>
+          <Grid item xs={12} sm={3} lg={5}>
+            {selectedEvent && (
+              <SpacedGridContainer>
+                <Grid
+                  item
+                  xs={12}
+                  md={10}
+                  css={`
+                    ${(props) =>
+                      props.theme._funcs.card({ variant: 'paper-1' })}
+                    padding: ${(props) => props.theme.spacing(2)}px;
+                  `}
+                >
+                  <SpacedGridContainer direction="column" gap={25}>
+                    <Grid item>
+                      <Typography variant="h5">
+                        {selectedEvent.title}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h6" align="left">
+                        {moment(selectedEvent.start).format('LL')}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <SpacedGridContainer justifyContent="space-between">
+                        <Grid item>
+                          <Typography variant="body1" align="left">
+                            {moment(selectedEvent.start).format('LT')}
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography variant="body1"> - </Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography variant="body1" align="right">
+                            {moment(selectedEvent.end).format('LT')}
+                          </Typography>
+                        </Grid>
+                      </SpacedGridContainer>
+                    </Grid>
+                    <Grid item>
+                      <CTAButton onClick={() => history.push('/session/game')}>
+                        Start Exercise
+                      </CTAButton>
+                    </Grid>
+                  </SpacedGridContainer>
+                </Grid>
+              </SpacedGridContainer>
+            )}
+          </Grid>
         </SpacedGridContainer>
       </Grid>
       <ClearBlock xs={12} pb={{ xs: 20, sm: 20, md: 10, lg: 10, xl: 10 }} />

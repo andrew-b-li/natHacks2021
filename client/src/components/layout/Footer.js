@@ -69,7 +69,7 @@ const footer = styled(({ ...props }) => {
               color: white;
             `}
           >
-            neural.ly &reg; {new Date().getFullYear()}
+            neural.ly &copy; {new Date().getFullYear()}
           </FormLabel>
         </Grid>
       </Grid>

@@ -98,14 +98,13 @@ router.post(
 
                 // Sign token
                 const token = jwt.sign(
-                  payload,
+                  user,
                   keys.secretOrKey,
                   {
                     expiresIn: 31556926, // 1 year in seconds
                   },
                   (err, token) => {
-                    console.log(err, token);
-                    res.json({ payload, token });
+                    res.json({ user, token });
                   }
                 );
               })
@@ -133,9 +132,10 @@ router.post(
     }
 
     passport.authenticate('local', { session: false }, (err, user, info) => {
+      console.error(err);
       if (err || !user) {
         return res.status(400).json({
-          errors: [info ? info.errors[0] : 'Login failed'],
+          message: info ? info.message : 'Login failed',
           user: user,
         });
       }
@@ -215,28 +215,6 @@ router.post(
         },
         { upsert: true, new: true }
       );
-
-      const createNewSession = await Session.create({
-        eventId: addEventToCalendar._id,
-        patientId: req.body.targetId,
-        clinicianId: req.user._id,
-        taskType: req.body.sessionInfo.task[0].label,
-        waveformTimeSeries: [],
-        score: -1,
-        protocolType: req.body.sessionInfo.protocol,
-        scheduledFor: req.body.sessionInfo.scheduledFor,
-        completedAt: -1,
-        reviewedAt: -1,
-        settings: {
-          scoreCalcMethod: req.body.sessionInfo.scoreCalcMethod,
-          difficultyLevel: req.body.sessionInfo.difficultyLevel,
-        },
-        stats: {
-          totalDuration: req.body.sessionInfo.totalDuration,
-          repsCompleted: 0,
-        },
-      });
-
       res.json(addEventToCalendar);
     }
   })
@@ -289,7 +267,7 @@ router.get(
     }
 
     if (req.user) {
-      User.findById(req.body.targetId, function (err, user) {
+      User.findById(req.body.targetId, (err, user) => {
         if (err || !user) {
           console.log(err);
           return res.status(400).json(err);
@@ -356,7 +334,7 @@ router.get(
 
     if (req.user) {
       // Get session and retrieve waveforms
-      Session.findOne({ eventId: req.body.targetId }, function (err, session) {
+      Session.findOne({ eventId: req.body.targetId }, (err, session) => {
         if (err || !session) {
           console.log(err);
           return res.status(400).json(err);

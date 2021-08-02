@@ -7,7 +7,7 @@ const SettingSchema = new Schema({
     required: true,
   },
   difficultyLevel: {
-    type: Number,
+    type: String,
     required: true,
   },
 });
@@ -40,7 +40,8 @@ const SessionSchema = new Schema({
   //   required: true,
   // },
   eventId: {
-    type: Number,
+    type: Schema.ObjectId,
+    ref: 'Event',
     required: true,
   },
   patientId: {
@@ -53,13 +54,13 @@ const SessionSchema = new Schema({
     ref: 'User',
     required: true,
   },
-  gameType: {
+  taskType: {
     type: String,
     required: true,
   },
   waveformTimeSeries: {
     type: [WaveformPoint],
-    required: true,
+    // required: true,
   },
   score: {
     type: Number,

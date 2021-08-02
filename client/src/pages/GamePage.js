@@ -49,7 +49,7 @@ import useDidMount from 'components/useDidMount';
 // import script from 'python/script.py';
 import { loginUser } from 'actions/authActions';
 
-const CalendarPage = styled(({ ...props }) => {
+const GamePage = styled(({ ...props }) => {
   const notification = useNotificationQueue();
   const appCtx = useContext(AppContext);
   const [userCtx, dispatch] = useContext(UserContext);
@@ -87,4 +87,4 @@ const CalendarPage = styled(({ ...props }) => {
   );
 })``;
 
-export default CalendarPage;
+export default GamePage;

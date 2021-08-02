@@ -11,6 +11,7 @@ export const loginUser = (userData, dispatch, notification, history) => {
       // Save to localStorage
       // Set token to localStorage
       const { token } = res.data;
+
       localStorage.setItem('jwtToken', token);
 
       // Set token to Auth header
@@ -37,7 +38,7 @@ export const loginUser = (userData, dispatch, notification, history) => {
           notification.add('loginError', {
             type: 'error',
             message:
-              err.response.data?.errors.join(', ') || H.defaultErrorMessage(),
+              err.response.data.errors.join(', ') || H.defaultErrorMessage(),
           });
         }
         //   console.error(err.response.data)
@@ -56,6 +57,7 @@ export const registerUser = (userData, dispatch, notification) => {
     .then((res) => {
       if (res.status === 200) {
         const { token } = res.data;
+        console.log(' res.data', res.data);
         localStorage.setItem('jwtToken', token);
 
         // Set token to Auth header

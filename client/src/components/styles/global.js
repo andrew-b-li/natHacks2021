@@ -386,3 +386,23 @@ export const Logo = styled((props) => (
   letter-spacing: 0.1em;
   color: #5551ff;
 `;
+
+export const CTAButton = styled(Button)`
+  .MuiButton-label {
+    letter-spacing: 0.25rem;
+  }
+  /* padding: 18px 77px; */
+  padding-top: ${(props) => props.theme.spacing(2)}px;
+  padding-bottom: ${(props) => props.theme.spacing(2)}px;
+  background: ${(props) => props.theme._colors.blue};
+  background: linear-gradient(
+    0deg,
+    rgba(84, 82, 255, 1) 0%,
+    rgba(97, 94, 255, 1) 100%
+  );
+  border-radius: 5px;
+  font-weight: bold;
+  color: #fff;
+  &:hover {
+  }
+`;

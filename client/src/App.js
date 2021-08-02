@@ -37,6 +37,8 @@ import AboutPage from 'pages/AboutPage';
 import PrivateRoute from './components/private-route/PrivateRoute';
 import { AnimatePresence, motion } from 'framer-motion';
 import { defaultVariantMappings } from 'components/styles/global';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import MomentUtils from '@date-io/moment';
 
 const pageTransitionAnimation = {
   initial: {
@@ -68,71 +70,77 @@ const App = () => {
 
   return (
     <StylesProvider injectFirst>
-      <AppContextProvider>
-        <NotificationProvider>
-          <UserContextProvider>
-            <MuiThemeProvider theme={theme}>
-              <ThemeProvider theme={theme}>
-                <Suspense fallback="loading">
-                  <MainLayout>
-                    <AnimatePresence exitBeforeEnter>
-                      <Switch location={location} key={location.pathname}>
-                        <AnimatedRoute exact path="/" component={LandingPage} />
-                        <AnimatedRoute
-                          exact
-                          path="/signup"
-                          component={SignUpPage}
-                        />
-                        <AnimatedRoute
-                          exact
-                          path="/about"
-                          component={AboutPage}
-                        />
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <AppContextProvider>
+          <NotificationProvider>
+            <UserContextProvider>
+              <MuiThemeProvider theme={theme}>
+                <ThemeProvider theme={theme}>
+                  <Suspense fallback="loading">
+                    <MainLayout>
+                      <AnimatePresence exitBeforeEnter>
+                        <Switch location={location} key={location.pathname}>
+                          <AnimatedRoute
+                            exact
+                            path="/"
+                            component={LandingPage}
+                          />
+                          <AnimatedRoute
+                            exact
+                            path="/signup"
+                            component={SignUpPage}
+                          />
+                          <AnimatedRoute
+                            exact
+                            path="/about"
+                            component={AboutPage}
+                          />
 
-                        {/* Private routes */}
-                        <AnimatedRoute
-                          privateRoute
-                          exact
-                          path="/user/dashboard"
-                          component={DashboardPage}
-                        />
-                        <AnimatedRoute
-                          privateRoute
-                          exact
-                          path="/user/calendar"
-                          component={CalendarPage}
-                        />
-                        <AnimatedRoute
-                          privateRoute
-                          exact
-                          path="/session/new"
-                          component={ScheduleNewSessionPage}
-                        />
+                          {/* Private routes */}
+                          <AnimatedRoute
+                            privateRoute
+                            exact
+                            path="/user/dashboard"
+                            component={DashboardPage}
+                          />
+                          <AnimatedRoute
+                            privateRoute
+                            exact
+                            path="/user/calendar"
+                            component={CalendarPage}
+                          />
+                          <AnimatedRoute
+                            privateRoute
+                            exact
+                            path="/session/new/:patientId"
+                            component={ScheduleNewSessionPage}
+                          />
 
-                        {/* Clinician session view */}
-                        <AnimatedRoute
-                          privateRoute
-                          exact
-                          path="/session/live"
-                          component={LiveSessionPage}
-                        />
+                          {/* Clinician session view */}
+                          <AnimatedRoute
+                            privateRoute
+                            exact
+                            path="/session/live"
+                            component={LiveSessionPage}
+                          />
 
-                        {/* Patient session view */}
-                        <AnimatedRoute
-                          privateRoute
-                          exact
-                          path="/session/game"
-                          component={GamePage}
-                        />
-                      </Switch>
-                    </AnimatePresence>
-                  </MainLayout>
-                </Suspense>
-              </ThemeProvider>
-            </MuiThemeProvider>
-          </UserContextProvider>
-        </NotificationProvider>
-      </AppContextProvider>
+                          {/* Patient session view */}
+                          <AnimatedRoute
+                            privateRoute
+                            exact
+                            path="/session/game"
+                            component={GamePage}
+                          />
+                        </Switch>
+                      </AnimatePresence>
+                    </MainLayout>
+                  </Suspense>
+                </ThemeProvider>
+              </MuiThemeProvider>
+            </UserContextProvider>
+          </NotificationProvider>
+        </AppContextProvider>
+      </MuiPickersUtilsProvider>
     </StylesProvider>
   );
 };

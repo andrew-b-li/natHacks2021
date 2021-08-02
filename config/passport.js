@@ -65,17 +65,21 @@ passport.use(
               return cb(null, user);
             } else {
               return cb(null, false, {
-                message: 'Incorrect email or password.',
+                errors: ['Incorrect email or password.'],
               });
             }
           });
 
           if (!user) {
-            return cb(null, false, { message: 'Incorrect email or password.' });
+            return cb(null, false, {
+              errors: ['Incorrect email or password.'],
+            });
           }
         })
         .catch((err) => {
-          return cb(err);
+          return cb(null, false, {
+            errors: ['Incorrect email or password.'],
+          });
         });
     }
   )
