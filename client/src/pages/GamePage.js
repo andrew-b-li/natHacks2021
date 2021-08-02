@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState, useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useContext, useEffect, useState, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 
 // Styling
 import {
@@ -11,25 +11,25 @@ import {
   TextField,
   Typography,
   useMediaQuery,
-} from "@material-ui/core";
-import theme from "config/theme";
-import styled, { css, keyframes } from "styled-components";
-import { darken, getLuminance, lighten, mix, rgba } from "polished";
-import { motion } from "framer-motion";
-import "styled-components/macro";
+} from '@material-ui/core';
+import theme from 'config/theme';
+import styled, { css, keyframes } from 'styled-components';
+import { darken, getLuminance, lighten, mix, rgba } from 'polished';
+import { motion } from 'framer-motion';
+import 'styled-components/macro';
 
 // Forms
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
 // Contexts
-import { AppContext } from "contexts/AppContext";
-import { UserContext } from "contexts/UserContext";
-import { useNotificationQueue } from "contexts/NotificationsContext";
+import { AppContext } from 'contexts/AppContext';
+import { UserContext } from 'contexts/UserContext';
+import { useNotificationQueue } from 'contexts/NotificationsContext';
 
 // Components
-import { Scheduler } from "@aldabil/react-scheduler";
+import { Scheduler } from '@aldabil/react-scheduler';
 
 // Helpers
 import {
@@ -39,15 +39,15 @@ import {
   Link,
   PageContainer,
   SpacedGridContainer,
-} from "components/styles/global";
+} from 'components/styles/global';
 
 // Hooks
-import useDidMountEffect from "components/useDidMountEffect";
-import useDidMount from "components/useDidMount";
+import useDidMountEffect from 'components/useDidMountEffect';
+import useDidMount from 'components/useDidMount';
 
 // Scripts and actions
 // import script from 'python/script.py';
-import { loginUser } from "actions/authActions";
+import { loginUser } from 'actions/authActions';
 
 const CalendarPage = styled(({ ...props }) => {
   const notification = useNotificationQueue();
@@ -57,29 +57,30 @@ const CalendarPage = styled(({ ...props }) => {
   // Set layout options (e.g. page title, dispaly header, etc.)
   useEffect(() => {
     appCtx.setMainLayoutOptions({
-      pageTitle: "neural.ly - neurofeedback from home.",
+      pageTitle: 'neural.ly - neurofeedback from home.',
       hideHeader: true,
     });
   }, [appCtx.setMainLayoutOptions]);
 
   //   Screen size
-  const isXSmall = useMediaQuery(theme.breakpoints.down("xs"));
-  const isSmall = useMediaQuery(theme.breakpoints.down("sm"));
+  const isXSmall = useMediaQuery(theme.breakpoints.down('xs'));
+  const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const Phaser = require("phaser");
+  const Phaser = require('phaser');
   const PreloadScene =
-    require("../games/lifting/scripts/scenes/preloadScene.js").default;
+    require('../games/lifting/scripts/scenes/preloadScene.js').default;
   const MainScene =
-    require("../games/lifting/scripts/scenes/mainScene.js").default;
+    require('../games/lifting/scripts/scenes/mainScene.js').default;
 
   const DEFAULT_WIDTH = 1280;
   const DEFAULT_HEIGHT = 720;
 
   const config = {
     type: Phaser.AUTO,
-    backgroundColor: "#ffffff",
+    backgroundColor: '#ffffff',
+    loaderBaseURL: '%PUBLIC_URL%',
     scale: {
-      parent: "phaser-game",
+      parent: 'phaser-game',
       mode: Phaser.Scale.FIT,
       autoCenter: Phaser.Scale.CENTER_BOTH,
       width: DEFAULT_WIDTH,
@@ -87,7 +88,7 @@ const CalendarPage = styled(({ ...props }) => {
     },
     scene: [PreloadScene, MainScene],
     physics: {
-      default: "arcade",
+      default: 'arcade',
       arcade: {
         debug: false,
         gravity: { y: 400 },
@@ -110,7 +111,7 @@ const CalendarPage = styled(({ ...props }) => {
       <Grid item xs={11}>
         <SpacedGridContainer
           spacing={isSmall ? 4 : 0}
-          direction={isSmall ? "column" : "row"}
+          direction={isSmall ? 'column' : 'row'}
         ></SpacedGridContainer>
       </Grid>
       <ClearBlock xs={12} pb={{ xs: 20, sm: 20, md: 30, lg: 30, xl: 30 }} />
