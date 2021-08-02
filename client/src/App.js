@@ -25,6 +25,10 @@ import { NotificationProvider } from 'contexts/NotificationsContext';
 import LandingPage from './pages/LandingPage';
 import SignUpPage from 'pages/SignUpPage';
 import DashboardPage from 'pages/DashboardPage';
+import CalendarPage from 'pages/CalendarPage';
+import ScheduleNewSessionPage from 'pages/ScheduleNewSessionPage';
+import LiveSessionPage from 'pages/LiveSessionPage';
+import GamePage from 'pages/GamePage';
 // import Login from './components/auth/Login';
 // import Register from './components/auth/Register';
 
@@ -78,11 +82,41 @@ const App = () => {
                           path="/signup"
                           component={SignUpPage}
                         />
+
+                        {/* Private routes */}
                         <AnimatedRoute
                           privateRoute
                           exact
                           path="/user/dashboard"
                           component={DashboardPage}
+                        />
+                        <AnimatedRoute
+                          privateRoute
+                          exact
+                          path="/user/calendar"
+                          component={CalendarPage}
+                        />
+                        <AnimatedRoute
+                          privateRoute
+                          exact
+                          path="/session/new"
+                          component={ScheduleNewSessionPage}
+                        />
+
+                        {/* Clinician session view */}
+                        <AnimatedRoute
+                          privateRoute
+                          exact
+                          path="/session/live"
+                          component={LiveSessionPage}
+                        />
+
+                        {/* Patient session view */}
+                        <AnimatedRoute
+                          privateRoute
+                          exact
+                          path="/session/game"
+                          component={GamePage}
                         />
                       </Switch>
                     </AnimatePresence>

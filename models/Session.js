@@ -31,24 +31,26 @@ const WaveformPoint = new Schema({
   y: {
     type: Number,
     required: true,
-  }
-})
+  },
+});
 
 const SessionSchema = new Schema({
-  sessionId: {
-    type: Number,
-    required: true,
-  },
+  // sessionId: {
+  //   type: Number,
+  //   required: true,
+  // },
   eventId: {
     type: Number,
     required: true,
   },
   patientId: {
-    type: Number,
+    type: Schema.ObjectId,
+    ref: 'User',
     required: true,
   },
   clinicianId: {
-    type: Number,
+    type: Schema.ObjectId,
+    ref: 'User',
     required: true,
   },
   gameType: {
@@ -69,7 +71,7 @@ const SessionSchema = new Schema({
   },
   scheduledFor: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   completedAt: {
     type: Date,

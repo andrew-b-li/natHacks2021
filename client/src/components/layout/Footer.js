@@ -37,55 +37,43 @@ const FormLabel = styled(Typography)`
   font-weight: 500;
 `;
 
+const FooterLink = styled(Link)`
+  color: white;
+`;
+
 const footer = styled(({ ...props }) => {
-  
-  
   return (
     <footer {...props}>
-      <Box>
-        <Container maxWidth='lg'>
-          <Grid container justify='flex-end' alignItems='flex-end'>
-            <Grid item>
-              <Paper>
-              <Box width={77} height={10} p={3}>
-                <Link href="/" color="inherit">
-                  About
-                </Link>
-              </Box>
-              </Paper>
-            </Grid>
-            <Grid item>
-              <Box width={100} height={10} p={3}>
-                <Link href="/" color="inherit">
-                  Contact Us
-                </Link>
-              </Box>
-            </Grid>
-            <Grid item>
-              <Box width={100} height={10} p={3}>
-                <Link href="/" color="inherit">
-                  Privacy
-                </Link>
-              </Box>
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
-      <Box>
-        <Container maxWidth='lg'>
-          <Grid container justify='flex-start' alignItems='flex-start'>
-            <Grid item>
-              <Paper>
-              <FormLabel>
-                neural.ly &reg; {new Date().getFullYear()}
-              </FormLabel>
-              </Paper>
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
-    </footer>
+      <Grid container justifyContent="space-evenly" alignItems="center">
+        <Grid item>
+          <FooterLink href="/" color="inherit">
+            About
+          </FooterLink>
+        </Grid>
 
+        <Grid item>
+          <FooterLink href="/" color="inherit">
+            Contact Us
+          </FooterLink>
+        </Grid>
+
+        <Grid item>
+          <FooterLink href="/" color="inherit">
+            Privacy
+          </FooterLink>
+        </Grid>
+
+        <Grid item>
+          <FormLabel
+            css={`
+              color: white;
+            `}
+          >
+            neural.ly &reg; {new Date().getFullYear()}
+          </FormLabel>
+        </Grid>
+      </Grid>
+    </footer>
   );
 })`
   /* Layout styles */
@@ -93,6 +81,8 @@ const footer = styled(({ ...props }) => {
   min-height: 40px;
   background: ${(props) => props.theme._colors.brown};
   flex-shrink: 0;
+
+  padding-top: 10px;
 `;
 
 export default footer;

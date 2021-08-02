@@ -166,3 +166,29 @@ export const randomUnique = (range, count) => {
 
 export const defaultErrorMessage = () => 'Sorry, something went wrong.';
 export const defaultSuccessMessage = () => 'Sucess';
+
+export const getDaysArray = (year, month) => {
+  const monthIndex = month - 1;
+  const names = Object.freeze([
+    'sun',
+    'mon',
+    'tue',
+    'wed',
+    'thu',
+    'fri',
+    'sat',
+  ]);
+  const date = new Date(year, monthIndex, 1);
+  const result = [];
+  while (date.getMonth() == monthIndex) {
+    result.push(`${date.getDate()}-${names[date.getDay()]}`);
+    date.setDate(date.getDate() + 1);
+  }
+  return result;
+};
+
+export const groupByN = (n, data) => {
+  let result = [];
+  for (let i = 0; i < data.length; i += n) result.push(data.slice(i, i + n));
+  return result;
+};

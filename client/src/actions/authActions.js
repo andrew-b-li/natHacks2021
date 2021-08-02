@@ -3,8 +3,6 @@ import setAuthToken from '../utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
 import * as H from '../utils/helpers';
 
-import NotificationList from 'components/layout/NotificationList';
-
 // Login - get user token
 export const loginUser = (userData, dispatch, notification, history) => {
   axios
@@ -38,7 +36,8 @@ export const loginUser = (userData, dispatch, notification, history) => {
           dispatch({ type: 'USER_DATA_FAIL' });
           notification.add('loginError', {
             type: 'error',
-            message: err.response.data?.errMsg || H.defaultErrorMessage(),
+            message:
+              err.response.data?.errors.join(', ') || H.defaultErrorMessage(),
           });
         }
         //   console.error(err.response.data)
@@ -92,11 +91,12 @@ export const registerUser = (userData, dispatch, notification) => {
       }
     })
     .catch((err) => {
-      console.log(err.response);
+      console.error(err.response);
       dispatch({ type: 'USER_DATA_FAIL' });
       notification.add('signUpError', {
         type: 'error',
-        message: err.response.data?.errMsg || H.defaultErrorMessage(),
+        message:
+          err.response.data?.errors.join(', ') || H.defaultErrorMessage(),
       });
     });
 };

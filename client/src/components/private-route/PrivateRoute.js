@@ -9,7 +9,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   const [loadingState, setLoadingState] = useState(0); // 0 -> loading, 1 -> authenticated, -1 -> not authenticated
 
   useEffect(() => {
-    console.log(userCtx.auth);
+    // console.log(userCtx.auth);
     if (userCtx.auth.isAuthenticated && !userCtx.auth.loading)
       setLoadingState(1);
     if (!userCtx.auth.isAuthenticated && !userCtx.auth.loading)

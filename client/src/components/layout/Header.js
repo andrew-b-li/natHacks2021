@@ -27,12 +27,19 @@ import { logoutUser } from 'actions/authActions';
 import { UserContext } from 'contexts/UserContext';
 import { AppContext } from 'contexts/AppContext';
 
-const LogoutBtn = styled(Button)`
+// Icons
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import EventNoteIcon from '@material-ui/icons/EventNote';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import { useHistory } from 'react-router-dom';
+
+const HeaderNavButton = styled(Button)`
   color: #fff;
   cursor: pointer;
 `;
 
 const Header = styled(({ ...props }) => {
+  const history = useHistory();
   const appCtx = useContext(AppContext);
   const [userCtx, userDispatch] = useContext(UserContext);
 
@@ -48,16 +55,39 @@ const Header = styled(({ ...props }) => {
                 <Link
                   to={userCtx?.auth?.isAuthenticated ? '/user/dashboard' : '/'}
                 >
-                  <Logo align="center" variant={'h3'} noWrap />
+                  <Logo
+                    align="center"
+                    variant={'h3'}
+                    noWrap
+                    css={`
+                      color: white;
+                    `}
+                  />
                 </Link>
               </Grid>
-              {userCtx?.auth?.isAuthenticated && (
-                <Grid item>
-                  <LogoutBtn onClick={() => logoutUser(userDispatch)}>
-                    Logout
-                  </LogoutBtn>
-                </Grid>
-              )}
+              <Grid item>
+                {userCtx?.auth?.isAuthenticated && (
+                  <SpacedGridContainer justifyContent="space-evenly">
+                    <Grid item>
+                      <HeaderNavButton onClick={() => null}>
+                        <NotificationsIcon />
+                      </HeaderNavButton>
+                    </Grid>
+                    <Grid item>
+                      <HeaderNavButton
+                        onClick={() => history.push('/user/calendar')}
+                      >
+                        <EventNoteIcon />
+                      </HeaderNavButton>
+                    </Grid>
+                    <Grid item>
+                      <HeaderNavButton onClick={() => logoutUser(userDispatch)}>
+                        <ExitToAppIcon />
+                      </HeaderNavButton>
+                    </Grid>
+                  </SpacedGridContainer>
+                )}
+              </Grid>
             </SpacedGridContainer>
           </Grid>
         </GridContainer>

@@ -355,25 +355,34 @@ export const StyledLink = styled((props) => (
   cursor: pointer;
 `;
 
-export const Link = ({ to, ...props }) => (
-  <RRDLink
-    css={`
-      text-decoration: none;
-    `}
-    to={to}
-  >
-    <StyledLink {...props} />
-  </RRDLink>
-);
+export const Link = ({ to, ...props }) => {
+  if (to) {
+    return (
+      <RRDLink
+        css={`
+          text-decoration: none;
+        `}
+        to={to}
+      >
+        <StyledLink {...props} />
+      </RRDLink>
+    );
+  } else {
+    return <StyledLink {...props} />;
+  }
+  return <></>;
+};
 
 export const Logo = styled((props) => (
   <Typography {...props}>neural.ly</Typography>
 ))`
+  padding-top: ${(props) => props.theme.spacing(1)}px;
+  padding-bottom: ${(props) => props.theme.spacing(2)}px;
   font-family: Fredericka the Great;
   font-style: normal;
   font-weight: normal;
   /* font-size: 64px; */
-  line-height: 78px;
+  /* line-height: 78px; */
   letter-spacing: 0.1em;
   color: #5551ff;
 `;

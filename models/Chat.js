@@ -3,11 +3,13 @@ const Schema = mongoose.Schema;
 
 const MessageSchema = new Schema({
   senderId: {
-    type: Number,
+    type: Schema.ObjectId,
+    ref: 'User',
     required: true,
   },
   receiverId: {
-    type: Number,
+    type: Schema.ObjectId,
+    ref: 'User',
     required: true,
   },
   message: {
@@ -26,15 +28,18 @@ const MessageSchema = new Schema({
 
 const ChatSchema = new Schema({
   sessionId: {
-    type: Number,
+    type: Schema.ObjectId,
+    ref: 'Session',
     required: true,
   },
   patientId: {
-    type: Number,
+    type: Schema.ObjectId,
+    ref: 'User',
     required: true,
   },
   clinicianId: {
-    type: Number,
+    type: Schema.ObjectId,
+    ref: 'User',
     required: true,
   },
   messages: {
