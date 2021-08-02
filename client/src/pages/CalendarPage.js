@@ -52,6 +52,7 @@ import Calendar from 'components/Calendar';
 import moment from 'moment';
 import {
   addEventToPatientCalendar,
+  deleteEventFromPatientCalendar,
   fetchUserCalendar,
 } from 'actions/userActions';
 
@@ -86,7 +87,12 @@ const CalendarPage = styled(({ ...props }) => {
       // console.log(userCtx.auth.userData);
       setUserType(userCtx.auth.userData.userType);
       // fetchUserEvents(userCtx.auth.userData, setUserEvents);
-      addEventToPatientCalendar();
+
+      // deleteEventFromPatientCalendar({
+      //   targetId: '6106e135d8f3797a80e15b60',
+      //   eventId: '61074ad391fdbf2eac16e9c6',
+      // });
+
       // fetchUserCalendar();
     }
   }, [userCtx.auth.isAuthenticated]);

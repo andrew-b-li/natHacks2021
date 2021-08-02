@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const passport = require('passport');
+const mongoose = require('mongoose');
 
 // Load input validation
 const validateRegisterInput = require('../../validation/register');
@@ -177,8 +178,6 @@ router.post(
     }
 
     if (req.user) {
-      console.log(req.body);
-
       const addEventToCalendar = await Calendar.findOneAndUpdate(
         { ownerId: req.body.targetId },
         {
@@ -188,8 +187,37 @@ router.post(
         },
         { upsert: true, new: true }
       );
-      const targetCalendar = await new Calendar(req.body).save();
-      res.json(targetCalendar);
+      res.json(addEventToCalendar);
+    }
+  })
+);
+router.post(
+  '/users/calendar/event/delete',
+  isAuthenticated,
+  body('targetId').notEmpty().withMessage('Invalid targetId'),
+  body('eventId').notEmpty().withMessage('Invalid eventId'),
+  catchErrors(async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log(errors);
+      return res.status(400).json({ errors: errors.array().map((x) => x.msg) });
+    }
+
+    if (req.user) {
+      // try {
+      const removeEventFromCalendar = await Calendar.findOneAndUpdate(
+        { ownerId: req.body.targetId },
+        {
+          $pull: {
+            events: { ['_id']: req.body.eventId },
+          },
+        }
+      );
+      res.json(removeEventFromCalendar);
+      // } catch (err) {
+      //   console.error(err);
+      //   return res.status(400).json(err);
+      // }
     }
   })
 );

@@ -15,22 +15,27 @@ export const fetchUserCalendar = () => {
 };
 
 // TODO: Check for clinician authorization here
-export const addEventToPatientCalendar = () => {
+export const addEventToPatientCalendar = ({ targetId, events }) => {
   axios
     .post('/api/users/calendar/event/create', {
-      targetId: '61061bac1d26a229a069f832',
-      events: [
-        {
-          startDate: '1627866232444',
-          endDate: '1627866232444',
-          title: 'Test event',
-        },
-      ],
+      targetId: targetId,
+      events: events,
     })
-    .then(function (response) {
-      console.log(response);
+    .then(function (res) {
+      console.log(res);
     })
-    .catch(function (error) {
-      console.log(error);
+    .catch(function (err) {
+      console.error(err);
+    });
+};
+
+export const deleteEventFromPatientCalendar = ({ targetId, eventId }) => {
+  axios
+    .post('/api/users/calendar/event/delete', { targetId, eventId })
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.error(err);
     });
 };
