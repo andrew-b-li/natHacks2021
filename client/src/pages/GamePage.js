@@ -49,6 +49,41 @@ import useDidMount from 'components/useDidMount';
 // import script from 'python/script.py';
 import { loginUser } from 'actions/authActions';
 
+// Plotting
+import Chart from 'react-apexcharts';
+
+// Scripts
+import script from 'python/script.py';
+
+const updateVisualizer = ({
+  pythonFile,
+  loadedNumpy,
+  slidersNamespace,
+  setData,
+}) => {
+  if (pythonFile && loadedNumpy) {
+    window.pyArgs = { ...slidersNamespace };
+    const runPyScript = window.pyodide.runPython(pythonFile);
+    const gen_data = window.pyodide.runPython(`generate_data()`);
+    const get_data = window.pyodide.runPython(`get_data()`);
+    console.log(get_data);
+
+    // setData();
+
+    setData(get_data);
+
+    // setData(output.toJs())
+
+    return () => {
+      runPyScript.destroy();
+      gen_data.destory();
+      get_data.destroy();
+      // output.destroy();
+      // generate_data.destroy();
+    };
+  }
+};
+
 const GamePage = styled(({ ...props }) => {
   const notification = useNotificationQueue();
   const appCtx = useContext(AppContext);
@@ -65,6 +100,92 @@ const GamePage = styled(({ ...props }) => {
   //   Screen size
   const isXSmall = useMediaQuery(theme.breakpoints.down('xs'));
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [pythonFile, setPythonFile] = useState(null);
+  const [loadedNumpy, setLoadedNumpy] = useState(false);
+  const [data, setData] = useState([]);
+
+  //   Slider vars
+  const [tAmp, setTAmp] = useState(0.2);
+  const [bAmp, setBAmp] = useState(0.2);
+  const [sliderUpdateComplete, setSliderUpdateComplete] = useState(true);
+  const [slidersNamespace, setSlidersNamespace] = useState({
+    epochDuration: 0.25,
+    samplingRate: 512,
+    tAmp: tAmp, // 0 - 0.5 mV
+    tFreq: 5, // 3.5 - 7
+    tNoise: 1, // 0 - 10
+    bAmp: bAmp, // 0 - 0.5 mV
+    bFreq: 15, // 12 - 20
+    bNoise: 1, // 0 - 10
+  });
+
+  const [sliderConfigs, setSliderConfigs] = useState({ minAmp: 0, maxAmp: 10 });
+
+  useEffect(() => {
+    if (!pythonFile || !loadedNumpy) {
+      window.languagePluginLoader.then(() => {
+        fetch(script)
+          .then((src) => src.text())
+          .then((code) => setPythonFile(code))
+          .then(() =>
+            window.pyodide
+              .loadPackage(['numpy'])
+              .then(() => setLoadedNumpy(true))
+          );
+      });
+    }
+  }, [loadedNumpy, pythonFile]);
+
+  const visualizeData = useCallback(() => {
+    // Once python script and numpy have been loaded
+    updateVisualizer({ pythonFile, loadedNumpy, slidersNamespace, setData });
+  }, [pythonFile, loadedNumpy]);
+
+  useDidMountEffect(() => {
+    if (
+      pythonFile &&
+      loadedNumpy &&
+      data &&
+      slidersNamespace &&
+      !sliderUpdateComplete
+    ) {
+      //   console.log(slidersNamespace.bAmp, slidersNamespace.tAmp);
+      // window.pyodide.registerJsModule('sliders_namespace', slidersNamespace);
+      updateVisualizer({ pythonFile, loadedNumpy, slidersNamespace, setData });
+      setSliderUpdateComplete(true);
+    }
+  }, [pythonFile, loadedNumpy, data, slidersNamespace, sliderUpdateComplete]);
+
+  const sliderCB = (value, type) => {
+    let sliders_namespace = {
+      ...slidersNamespace,
+      tAmp: type === 'theta' ? value : slidersNamespace.tAmp, // 0 - 0.5 mV
+      bAmp: type === 'beta' ? value : slidersNamespace.bAmp, // 0 - 0.5 mV
+    };
+    setSlidersNamespace(sliders_namespace);
+    setSliderUpdateComplete(false);
+  };
+
+  const chartData = {
+    options: {
+      chart: {
+        id: 'data',
+      },
+      xaxis: {
+        type: 'numeric',
+      },
+      yaxis: {
+        decimalsInFloat: 2,
+      },
+    },
+    series: [
+      {
+        name: 'series-1',
+        data: data,
+      },
+    ],
+  };
 
   const Phaser = require('phaser');
   const PreloadScene =
@@ -115,7 +236,7 @@ const GamePage = styled(({ ...props }) => {
   return (
     <PageContainer alignContent="center" defeaultPadding {...props}>
       {/* <ClearBlock xs={12} pb={{ xs: 20, sm: 20, md: 30, lg: 30, xl: 30 }} /> */}
-      <Grid item xs={11}>
+      <Grid item xs={11} md={6}>
         <SpacedGridContainer
           spacing={isSmall ? 4 : 0}
           direction={isSmall ? 'column' : 'row'}
@@ -135,6 +256,63 @@ const GamePage = styled(({ ...props }) => {
             </GridContainer>
           </Grid>
         </SpacedGridContainer>
+      </Grid>
+      <Grid item xs={11} md={6}>
+        <Grid container justifyContent="center">
+          <Grid item xs={12} sm={8} md={6}>
+            <Chart
+              options={chartData.options}
+              series={chartData.series}
+              type="line"
+              width="100%"
+            />
+          </Grid>
+          <ClearBlock pb={10} />
+          <Grid item xs={8}>
+            <SpacedGridContainer spacing={4} justifyContent="center">
+              <Grid item xs={6}>
+                <GridContainer>
+                  <Grid item xs={12}>
+                    <Typography variant="h6" color="initial" align="center">
+                      Theta amplitude
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Slider
+                      //   defaultValue={0.2}
+                      value={slidersNamespace.tAmp}
+                      step={0.1}
+                      min={sliderConfigs.minAmp}
+                      max={sliderConfigs.maxAmp}
+                      valueLabelDisplay="auto"
+                      onChange={(e, v) => sliderCB(v, 'theta')}
+                    />
+                  </Grid>
+                </GridContainer>
+              </Grid>
+              <Grid item xs={6}>
+                <GridContainer>
+                  <Grid item xs={12}>
+                    <Typography variant="h6" color="initial" align="center">
+                      Beta amplitude
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Slider
+                      //   defaultValue={0.2}
+                      value={slidersNamespace.bAmp}
+                      step={0.1}
+                      min={sliderConfigs.minAmp}
+                      max={sliderConfigs.maxAmp}
+                      valueLabelDisplay="auto"
+                      onChange={(e, v) => sliderCB(v, 'beta')}
+                    />
+                  </Grid>
+                </GridContainer>
+              </Grid>
+            </SpacedGridContainer>
+          </Grid>
+        </Grid>
       </Grid>
       {/* <ClearBlock xs={12} pb={{ xs: 20, sm: 20, md: 30, lg: 30, xl: 30 }} /> */}
     </PageContainer>

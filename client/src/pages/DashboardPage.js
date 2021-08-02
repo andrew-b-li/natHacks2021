@@ -54,6 +54,7 @@ import useDidMount from 'components/useDidMount';
 // Scripts and actions
 // import script from 'python/script.py';
 import { loginUser } from 'actions/authActions';
+import { fetchAllUsers } from 'actions/userActions';
 
 // #region Left side
 const CTAText = ({
@@ -76,9 +77,16 @@ const CTAText = ({
         <SpacedGridContainer boxProps={{ pt: 2 }} spacing={2}>
           {patientsNeedingReview.map((patient, idx) => (
             <Grid item key={idx}>
-              <Link>
-                <Avatar />
-              </Link>
+              <SpacedGridContainer direction={'column'}>
+                <Link to={`/session/new/${patient._id}`}>
+                  <Grid item>
+                    <Avatar />
+                  </Grid>
+                </Link>
+                <Grid item>
+                  <Typography variant="subtitle1">{patient.name}</Typography>
+                </Grid>
+              </SpacedGridContainer>
             </Grid>
           ))}
         </SpacedGridContainer>
@@ -133,6 +141,8 @@ const DashboardPage = styled(({ ...props }) => {
   const [activePatients, setActivePatients] = useState([]);
   const [sessionHistory, setSesionHistory] = useState([]);
 
+  const [users, setUsers] = useState([]);
+
   // User state change listeners
   useEffect(() => {
     // User is authenticated
@@ -140,6 +150,18 @@ const DashboardPage = styled(({ ...props }) => {
       setUserType(userCtx.auth.userData.userType);
     }
   }, [userCtx.auth.isAuthenticated]);
+
+  useEffect(() => {
+    if (userType === 'clinician' && users.length === 0) {
+      fetchAllUsers(userCtx.auth.userData.id, setUsers);
+    }
+  }, [userType]);
+
+  useEffect(() => {
+    if (users.length > 0) {
+      console.log(users);
+    }
+  }, [users]);
 
   return (
     <PageContainer alignContent="center" defeaultPadding {...props}>
@@ -171,7 +193,11 @@ const DashboardPage = styled(({ ...props }) => {
 
                   <Grid item xs={12}>
                     <CTAText
-                      {...{ userType, nextSessionDate, patientsNeedingReview }}
+                      {...{
+                        userType,
+                        nextSessionDate,
+                        patientsNeedingReview: users,
+                      }}
                     />
                   </Grid>
                 </SpacedGridContainer>

@@ -14,6 +14,18 @@ export const getUserById = ({ userId }, setData) => {
     });
 };
 
+export const fetchAllUsers = (currUserId, setUsers) => {
+  axios
+    .get('/api/users/all')
+    .then(function (res) {
+      console.log(res);
+      setUsers(res.data.filter((x) => x._id !== currUserId));
+    })
+    .catch(function (err) {
+      console.error(err);
+    });
+};
+
 export const fetchUserCalendar = (setUserEvents) => {
   axios
     .get('/api/users/calendar')
@@ -33,13 +45,19 @@ export const fetchUserCalendar = (setUserEvents) => {
 };
 
 // TODO: Check for clinician authorization here
-export const addEventToPatientCalendar = (data) => {
+export const addEventToPatientCalendar = (data, notification) => {
   axios
     .post('/api/users/calendar/event/create', {
       ...data,
     })
     .then(function (res) {
-      console.log(res);
+      if (res.status === 200)
+        notification.add('addEventToPatientCalendarSuccess', {
+          type: 'success',
+          message:
+            'Task successfully added to patient schedule.' ||
+            H.defaultSuccessMessage(),
+        });
     })
     .catch(function (err) {
       console.error(err);

@@ -932,22 +932,25 @@ const ScheduleNewSessionPage = styled(({ ...props }) => {
     const endDate = moment(data.scheduledFor)
       .add(Number(data.sessionDuration), 'minutes')
       .toDate();
-    addEventToPatientCalendar({
-      targetId: patientId,
-      events: [
-        {
-          title: data.task[0].label,
-          startDate: startDate,
-          endDate: endDate,
+    addEventToPatientCalendar(
+      {
+        targetId: patientId,
+        events: [
+          {
+            title: data.task[0].label,
+            startDate: startDate,
+            endDate: endDate,
+          },
+        ],
+        sessionInfo: {
+          ...data,
+          totalDuration: moment
+            .duration(moment(endDate).diff(startDate))
+            .asMinutes(),
         },
-      ],
-      sessionInfo: {
-        ...data,
-        totalDuration: moment
-          .duration(moment(endDate).diff(startDate))
-          .asMinutes(),
       },
-    });
+      notification
+    );
   };
 
   return (

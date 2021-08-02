@@ -178,6 +178,11 @@ router.get('/users/get/:userId', getUserById, (req, res) => {
   return res.json({ ...userInfo });
 });
 
+router.get('/users/all', async (req, res) => {
+  const users = await User.find().select('_id email name createdAt');
+  res.json(users);
+});
+
 // Get calendar
 router.get(
   '/users/calendar',
