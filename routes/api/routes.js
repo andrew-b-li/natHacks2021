@@ -229,6 +229,32 @@ router.post(
   })
 );
 
+// Obtain list of connections
+// Patient: list of connected clinicians
+// Clinician: list of connected patients
+router.get(
+  '/users/connections/get',
+  isAuthenticated,
+  body('targetId').notEmpty().withMessage("Invalid targetId"),
+  catchErrors(async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log(errors);
+      return res.status(400).json({ errors: errors.array().map((x) => x.msg) });
+    }
+
+    if (req.user) {
+      User.findById(req.body.targetId, function (err, user) => {
+        if (err || !user) {
+          console.log(err)
+          return res.status(400).json(err)
+        } 
+        res.json(user.connections)
+      });
+    }
+  })
+)
+
 // EEG save endpoint by session
 // Searches through sessions using session ID, NOT client ID
 router.post(
