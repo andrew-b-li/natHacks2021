@@ -58,7 +58,7 @@ const CalendarPage = styled(({ ...props }) => {
   useEffect(() => {
     appCtx.setMainLayoutOptions({
       pageTitle: 'neural.ly - neurofeedback from home.',
-      hideHeader: true,
+      hideHeader: false,
     });
   }, [appCtx.setMainLayoutOptions]);
 
@@ -81,7 +81,7 @@ const CalendarPage = styled(({ ...props }) => {
     loaderBaseURL: '%PUBLIC_URL%',
     scale: {
       parent: 'phaser-game',
-      mode: Phaser.Scale.FIT,
+      mode: Phaser.Scale.WIDTH_CONTROLS_HEIGHT,
       autoCenter: Phaser.Scale.CENTER_BOTH,
       width: DEFAULT_WIDTH,
       height: DEFAULT_HEIGHT,
@@ -96,7 +96,14 @@ const CalendarPage = styled(({ ...props }) => {
     },
   };
 
-  new Phaser.Game(config);
+  useEffect(() => {
+    if (!window.liftingGame) window.liftingGame = new Phaser.Game(config);
+
+    return () => {
+      window.liftingGame.destroy();
+      window.liftingGame = null;
+    };
+  }, [Phaser, PreloadScene, MainScene]);
 
   // User state change listeners
   //   useDidMountEffect(() => {
@@ -107,14 +114,29 @@ const CalendarPage = styled(({ ...props }) => {
 
   return (
     <PageContainer alignContent="center" defeaultPadding {...props}>
-      <ClearBlock xs={12} pb={{ xs: 20, sm: 20, md: 30, lg: 30, xl: 30 }} />
+      {/* <ClearBlock xs={12} pb={{ xs: 20, sm: 20, md: 30, lg: 30, xl: 30 }} /> */}
       <Grid item xs={11}>
         <SpacedGridContainer
           spacing={isSmall ? 4 : 0}
           direction={isSmall ? 'column' : 'row'}
-        ></SpacedGridContainer>
+        >
+          <Grid item xs={12}>
+            <GridContainer
+              css={`
+                &,
+                *,
+                > canvas {
+                  width: 100%;
+                  height: 100%;
+                }
+              `}
+            >
+              <Grid item id="phaser-game"></Grid>
+            </GridContainer>
+          </Grid>
+        </SpacedGridContainer>
       </Grid>
-      <ClearBlock xs={12} pb={{ xs: 20, sm: 20, md: 30, lg: 30, xl: 30 }} />
+      {/* <ClearBlock xs={12} pb={{ xs: 20, sm: 20, md: 30, lg: 30, xl: 30 }} /> */}
     </PageContainer>
   );
 })``;
